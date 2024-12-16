@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title data-th-text="${title}">Title</title>
+</head>
+<body>
+<p data-th-text="${title}">Title</p>
+<p th:text="${title}">test</p>
+
+<p>
+<h1>New Account</h1>
+</p>
+<form th:object="${account}"
+      th:action="@{/api/account/create}"
+      method="post">
+    <div>
+        <label for="name">Name</label>
+        <input id="name" type="text"
+               th:field="*{name}">
+        <p th:if="${#fields.hasErrors('name')}"
+           th:text="${#strings.listJoin(#fields.errors('name'), ', ')}"></p>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input id="password" type="text"
+               th:field="*{password}">
+        <p th:if="${#fields.hasErrors('password')}"
+           th:text="${#strings.listJoin(#fields.errors('password'), ', ')}"></p>
+        <p th:if="${#fields.hasErrors('password')}"
+           th:text="${#strings.listJoin(#fields.errors('password'), ', ')}"></p>
+    </div>
+    <button type="submit">Create user</button>
+
+</form>
+</body>
+</html>
