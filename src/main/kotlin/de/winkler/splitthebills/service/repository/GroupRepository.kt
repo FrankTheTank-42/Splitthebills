@@ -1,6 +1,6 @@
 package de.winkler.splitthebills.service.repository
 
-import de.winkler.splitthebill.entity.Group
+import de.winkler.splitthebills.entity.Group
 import org.springframework.data.repository.CrudRepository
 import java.util.UUID
 

@@ -1,10 +1,10 @@
 package de.winkler.splitthebills.service
 
-import de.winkler.splitthebill.entity.Group
-import de.winkler.splitthebill.service.repository.BillRepository
-import de.winkler.splitthebill.service.repository.BillPartRepository
-import de.winkler.splitthebill.service.repository.GroupRepository
-import de.winkler.splitthebill.service.repository.PersonRepository
+import de.winkler.splitthebills.entity.Group
+import de.winkler.splitthebills.service.repository.BillRepository
+import de.winkler.splitthebills.service.repository.BillPartRepository
+import de.winkler.splitthebills.service.repository.GroupRepository
+import de.winkler.splitthebills.service.repository.PersonRepository
 import org.springframework.stereotype.Component
 
 @Component

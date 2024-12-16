@@ -1,8 +1,8 @@
 package de.winkler.splitthebills.controller.api
 
-import de.winkler.splitthebill.entity.*
-import de.winkler.splitthebill.service.BillService
-import de.winkler.splitthebill.service.repository.AccountRepository
+import de.winkler.splitthebills.entity.*
+import de.winkler.splitthebills.service.BillService
+import de.winkler.splitthebills.service.repository.AccountRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

@@ -1,7 +1,7 @@
 package de.winkler.splitthebills.controller
 
-import de.winkler.splitthebill.entity.Group
-import de.winkler.splitthebill.service.BillService
+import de.winkler.splitthebills.entity.Group
+import de.winkler.splitthebills.service.BillService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set

@@ -1,6 +1,6 @@
 package de.winkler.splitthebills.service
 
-import de.winkler.splitthebill.service.repository.AccountRepository
+import de.winkler.splitthebills.service.repository.AccountRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
