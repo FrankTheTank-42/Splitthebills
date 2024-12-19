@@ -6,5 +6,5 @@ import java.util.UUID
 
 interface GroupRepository : CrudRepository<Group, UUID> {
 
-
+    fun existsByName(name: String) : Boolean
 }

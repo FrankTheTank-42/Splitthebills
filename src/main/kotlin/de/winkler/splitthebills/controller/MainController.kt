@@ -30,11 +30,8 @@ class MainController(val billService: BillService) {
     fun bill(model: Model, @PathVariable billId: String): String {
 
         val uuid = UUID.fromString(billId);
-        val bills = billService.listBills();
-        val group: Group = bills.filter { b -> b.id.equals(uuid) }.first();
 
         model["title"] = "Split The Bill"
-        model["bill"] = group;
         return "bill"
     }
 }

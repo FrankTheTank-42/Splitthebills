@@ -22,6 +22,7 @@ class SecurityConfig {
                 authorize("/default-ui.css", permitAll)
                 authorize("/ui/user/new", permitAll)
                 authorize("/api/account/create", permitAll)
+                authorize("/**", hasAuthority("USER") )
             }
             formLogin {
                 //loginPage = "/ui/user/login"

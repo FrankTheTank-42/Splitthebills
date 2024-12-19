@@ -15,8 +15,25 @@ class BillService(
     val billRepository: BillRepository
 ) {
 
-    fun listBills(): MutableIterable<Group> {
-        return groupRepository.findAll();
+    fun listGroups(account_name: String): MutableIterable<Group> {
+        var groups = groupRepository.findAll();
+        var filtered: MutableList<Group> = ArrayList();
+        for (group in groups) {
+            if (hasAccount(group, account_name)) {
+                filtered.add(group);
+            }
+        }
+        return filtered;
+    }
+
+    fun hasAccount(group: Group, account_name: String): Boolean {
+        for (account in group.accounts) {
+            if (account.name.equals(account_name)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     fun saveBill(group: Group) {

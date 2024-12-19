@@ -2,32 +2,16 @@ package de.winkler.splitthebills.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.io.Serializable
-import java.security.MessageDigest
+import java.util.UUID
 
 @Entity
-class Account(@Id val name: String, val mail: String, val password: String, val yourself: Person) : Serializable {
-
-
+class Account(
+    val name: String,
+    val mail: String,
+    val passwordhash: String,
+) : Serializable {
+    @Id
+    val id = UUID.randomUUID();
 }
-
-
-class NewAccount(var name: String?, var mail: String?, var password: String?, var yourself: Person?) {
-
-    constructor() : this(null, null, null, null)
-
-    fun isComplete(): Boolean {
-        return !(name == null || mail == null || password == null || yourself == null)
-    }
-
-    fun toAccount(): Account {
-
-        if (name == null || mail == null || password == null || yourself == null) {
-            throw IllegalArgumentException("not all properties are initialize")
-        }
-
-        return Account(name!!, mail!!, password!!, yourself!!)
-
-    }
-}
-

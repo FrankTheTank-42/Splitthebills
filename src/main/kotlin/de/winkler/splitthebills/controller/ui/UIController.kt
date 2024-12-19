@@ -1,6 +1,5 @@
 package de.winkler.splitthebills.controller.ui
 
-import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.entity.NewAccount
 import de.winkler.splitthebills.service.BillService
 import org.springframework.stereotype.Controller
@@ -9,7 +8,8 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import java.util.UUID
+import java.security.Principal
+import java.util.*
 
 
 @Controller
@@ -24,33 +24,44 @@ class UIController(val billService: BillService) {
     }
 
     @GetMapping("/overview")
-    fun overview(model: Model): String {
+    fun overview(principal: Principal, model: Model): String {
         model["title"] = "Split The Bill"
-        val bills = billService.listBills();
-
-        model["bills"] = bills;
+        val bills = billService.listGroups(principal.name);
+        model["name"] = bills;
         return "overview"
     }
 
-    @GetMapping("/bill/{billId}")
-    fun bill(model: Model, @PathVariable billId: String): String {
 
-        val uuid = UUID.fromString(billId);
-        val bills = billService.listBills();
-        val group: Group = bills.filter { b -> b.id.equals(uuid) }.first();
+    @GetMapping("/groups")
+    fun groups(principal: Principal, model: Model): String {
+        val groups = billService.listGroups(principal.name);
+        model["groups"] = groups;
+        return "groups"
+    }
 
-        model["title"] = "Split The Bill"
-        model["bill"] = group;
-        return "bill"
+    @GetMapping("/group/{groupId}")
+    fun group(principal: Principal, model: Model, @PathVariable groupId: String): String {
+        val group = billService.groupRepository.findById(UUID.fromString(groupId));
+        if (!group.isPresent) {
+            model["empty"] = true;
+        }
+
+        val authorized = group.get().accounts.filter { account -> account.name.equals(principal.name) }.isNotEmpty();
+        if (authorized) {
+            model["group"] = group;
+        } else {
+            model["authorized"] = false;
+        }
+        return "group"
     }
 
     @GetMapping("/user/login")
-    fun login(model: Model):String{
+    fun login(model: Model): String {
         return "login"
     }
 
     @GetMapping("/user/new")
-    fun newAccount(model: Model):String{
+    fun newAccount(model: Model): String {
         model["account"] = NewAccount();
         return "newAccount"
     }

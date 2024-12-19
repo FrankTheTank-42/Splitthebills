@@ -2,46 +2,65 @@ package de.winkler.splitthebills.controller.api
 
 import de.winkler.splitthebills.entity.*
 import de.winkler.splitthebills.service.BillService
+import de.winkler.splitthebills.service.UserDetailsImpl
 import de.winkler.splitthebills.service.repository.AccountRepository
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
 
 
 @RestController
 @RequestMapping("/api")
-class ApiController(val billService: BillService, val accountRepository: AccountRepository) {
+class ApiController(
+    val billService: BillService,
+    val accountRepository: AccountRepository,
+    val encoder: PasswordEncoder
+) {
 
     @GetMapping("/bill")
-    fun listBills(): MutableIterable<Group> {
-
+    fun listBills(principal: Principal): MutableIterable<Group> {
         println("get bills")
-        return billService.listBills();
 
+        println(principal.name);
+        return billService.listGroups(principal.name);
     }
 
-    @GetMapping("/bill/addOne")
-    fun addOne(): Long {
-        println("add bills")
-        val me = Person("me")
-        val persons: MutableList<Person> = mutableListOf(me)
-        val billentries: MutableList<BillPart> = mutableListOf(BillPart(me, 10.0))
-        val b1 = Group("mybill", persons, ArrayList<Bill>())
-        billService.saveBill(b1);
 
-        return billService.groupRepository.count();
+    @PostMapping("/group/create")
+    fun createGroup(principal: Principal, name: String): Boolean {
+
+        if (billService.groupRepository.existsByName(name)) {
+            return false;
+        }
+
+        val group = groupOf(name);
+
+        val account = accountRepository.findByName(principal.name);
+
+        group.accounts.add(account.get());
+
+        try {
+            billService.groupRepository.save(group);
+            return true;
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false;
+        }
+
     }
 
     @PostMapping("/account/create")
     fun createAccount(newAccount: NewAccount): Boolean {
-        if(!newAccount.isComplete()){
+        if (!newAccount.isComplete()) {
             return false;
         }
 
-        val account = newAccount.toAccount()
+        val account = newAccount.toAccount(encoder)
 
-        if (accountRepository.existsById(account.name)) {
+        if (accountRepository.existsByName(account.name)) {
             return false;
         }
         try {

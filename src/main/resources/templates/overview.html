@@ -6,21 +6,15 @@
 </head>
 <body>
 <p data-th-text="${title}">Title</p>
-<p th:text="${title}">test</p>
-<table>
-    <thead>
-    <tr>
-        <td>Link</td>
-        <td>Name</td>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="bill: ${bills}">
-        <td th:text="bill ${bill.id}"/>
-        <td th:text="${bill.name}"/>
-    </tr>
-    </tbody>
-</table>
+
+<p> New?
+    <a data-th-href="@{/ui/user/new}">Create a new account</a>
+</p>
+
+<p> Already Registrated?
+    <a data-th-href="@{/ui/user/login}">Login</a>
+</p>
+
 
 </body>
 </html>

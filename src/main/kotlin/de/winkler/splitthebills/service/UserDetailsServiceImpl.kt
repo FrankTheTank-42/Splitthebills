@@ -13,10 +13,10 @@ class UserDetailsServiceImpl(val accountRepository: AccountRepository) : UserDet
             throw UsernameNotFoundException(username);
         }
 
-        val account = accountRepository.findById(username);
+        val account = accountRepository.findByName(username);
         if (!account.isPresent) {
             throw UsernameNotFoundException(username);
         }
-        return de.winkler.splitthebills.service.UserDetailsImpl(account.get());
+        return UserDetailsImpl(account.get());
     }
 }

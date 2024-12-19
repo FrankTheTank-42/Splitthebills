@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Groups</h1>
+<table>
+    <tr>
+        <td>Name</td>
+    </tr>
+
+    <tr th:each="group: ${groups}">
+        <td th:text="${billentry.name}"/>
+        <a data-th-href="/ui/"
+    </tr>
+</table>
+</body>
+</html>

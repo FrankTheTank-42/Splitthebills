@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails
 class UserDetailsImpl(val account: Account) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authorities: MutableList<GrantedAuthority> = ArrayList()
-        authorities.add(SimpleGrantedAuthority(account.yourself.id.toString()))
+        authorities.add(SimpleGrantedAuthority(account.name))
+        authorities.add(SimpleGrantedAuthority("USER"))
         return authorities
     }
 
     override fun getPassword(): String {
-        return account.password
+        return account.passwordhash
     }
 
     override fun getUsername(): String {
