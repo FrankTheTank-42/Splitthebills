@@ -1,4 +1,4 @@
-package de.winkler.splitthebills.controller.ui
+package de.winkler.splitthebills.controller.ui.thymeleaf
 
 import de.winkler.splitthebills.entity.NewAccount
 import de.winkler.splitthebills.service.BillService

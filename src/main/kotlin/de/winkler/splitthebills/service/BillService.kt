@@ -1,10 +1,7 @@
 package de.winkler.splitthebills.service
 
 import de.winkler.splitthebills.entity.Group
-import de.winkler.splitthebills.service.repository.BillRepository
-import de.winkler.splitthebills.service.repository.BillPartRepository
-import de.winkler.splitthebills.service.repository.GroupRepository
-import de.winkler.splitthebills.service.repository.PersonRepository
+import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
 
 @Component
@@ -12,10 +9,11 @@ class BillService(
     val groupRepository: GroupRepository,
     val personRepository: PersonRepository,
     val billPartRepository: BillPartRepository,
-    val billRepository: BillRepository
+    val billRepository: BillRepository,
+    val accountRepository: AccountRepository
 ) {
 
-    fun listGroups(account_name: String): MutableIterable<Group> {
+    fun listGroups(account_name: String): MutableList<Group> {
         var groups = groupRepository.findAll();
         var filtered: MutableList<Group> = ArrayList();
         for (group in groups) {
@@ -36,7 +34,18 @@ class BillService(
 
     }
 
-    fun saveBill(group: Group) {
+    fun saveGroup(group: Group, account_name: String) {
+        val account = accountRepository.findByName(account_name);
+        if (!account.isPresent) {
+            return;
+        }
+
+        group.accounts.add(account.get());
+        saveGroup(group)
+
+    }
+
+    fun saveGroup(group: Group) {
         for (p in group.persons) {
             if (!personRepository.existsById(p.id)) {
                 personRepository.save(p);

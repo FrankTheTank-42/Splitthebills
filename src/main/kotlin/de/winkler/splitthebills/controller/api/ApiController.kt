@@ -2,8 +2,8 @@ package de.winkler.splitthebills.controller.api
 
 import de.winkler.splitthebills.entity.*
 import de.winkler.splitthebills.service.BillService
-import de.winkler.splitthebills.service.UserDetailsImpl
 import de.winkler.splitthebills.service.repository.AccountRepository
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,8 +16,8 @@ import java.security.Principal
 @RequestMapping("/api")
 class ApiController(
     val billService: BillService,
-    val accountRepository: AccountRepository,
-    val encoder: PasswordEncoder
+    val accountRepository: AccountRepository//,
+    /*val encoder: PasswordEncoder*/
 ) {
 
     @GetMapping("/bill")
@@ -28,6 +28,10 @@ class ApiController(
         return billService.listGroups(principal.name);
     }
 
+    @GetMapping("/groups")
+    fun getGroups(@AuthenticationPrincipal principal: String) :List<Group>{
+        return billService.listGroups(principal);
+    }
 
     @PostMapping("/group/create")
     fun createGroup(principal: Principal, name: String): Boolean {
@@ -36,7 +40,7 @@ class ApiController(
             return false;
         }
 
-        val group = groupOf(name);
+        val group = Group(name);
 
         val account = accountRepository.findByName(principal.name);
 
@@ -58,7 +62,7 @@ class ApiController(
             return false;
         }
 
-        val account = newAccount.toAccount(encoder)
+        val account = Account("1", "2", "3");// newAccount.toAccount(encoder)
 
         if (accountRepository.existsByName(account.name)) {
             return false;
