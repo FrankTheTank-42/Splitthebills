@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -14,6 +15,8 @@ import com.vaadin.flow.router.Menu
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteConfiguration
+import com.vaadin.flow.server.menu.MenuConfiguration
+import com.vaadin.flow.server.menu.MenuEntry
 import com.vaadin.flow.spring.security.AuthenticationContext
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.entity.Person
@@ -30,10 +33,10 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
     init {
 
 
-        val taskField: TextField = TextField()
+        val taskField = TextField()
 
 
-        val addButton: Button = Button("Add")
+        val addButton = Button("Add")
 
         val groupsList = billService.listGroups(authContent.principalName.get());
         val groupsGrid = Grid<Group>(groupsList)
@@ -52,6 +55,13 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
             billService.saveGroup(Group(taskField.getValue()), authContent.principalName.get())
         }
         addButton.addClickShortcut(Key.ENTER)
+        groupsList.forEach { group -> {
+            MenuConfiguration.getMenuEntries().add(MenuEntry(
+                "/groups/"+group.id,
+                group.name, 0.0,
+                LineAwesomeIconUrl.GLOBE_SOLID,
+                GroupView::class.java))
+        } }
 
         add(
             H1("Groups"),

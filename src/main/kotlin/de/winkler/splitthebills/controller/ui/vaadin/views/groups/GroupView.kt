@@ -13,6 +13,7 @@ import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.entity.Person
 import de.winkler.splitthebills.service.BillService
 import jakarta.annotation.security.PermitAll
+import org.vaadin.lineawesome.LineAwesomeIconUrl
 
 @PageTitle("Group")
 @Route("ui/vaadin/group")

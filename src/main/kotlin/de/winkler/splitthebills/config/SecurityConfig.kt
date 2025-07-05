@@ -24,6 +24,8 @@ class SecurityConfig : VaadinWebSecurity() {
                     authorize("/default-ui.css", permitAll)
                     authorize("/ui/user/new", permitAll)
                     authorize("/api/account/create", permitAll)
+                    authorize("/login", permitAll)
+                    authorize("/ui/user/login", permitAll)
                     //authorize("/ui/vaadin/account/login", permitAll)
                     //authorize("/VAADIN/**", permitAll)
                     authorize("/**", hasAuthority("USER"))
@@ -32,7 +34,6 @@ class SecurityConfig : VaadinWebSecurity() {
 
 
                 formLogin {
-                    loginPage = "/ui/vaadin/account/login"
                 }
             }
         }

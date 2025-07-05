@@ -5,6 +5,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle
 import com.vaadin.flow.component.html.Footer
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.Header
+import com.vaadin.flow.component.html.Paragraph
 import com.vaadin.flow.component.html.Span
 import com.vaadin.flow.component.icon.SvgIcon
 import com.vaadin.flow.component.orderedlayout.Scroller
@@ -72,7 +73,7 @@ class MainLayout(val authContent: AuthenticationContext) : AppLayout() {
     private fun createFooter(): Footer {
         val layout = Footer()
         if (authContent.principalName.isPresent) {
-            val name: TextField = TextField(authContent.principalName.get())
+            val name = Paragraph(authContent.principalName.get())
             layout.add(name);
         }
         return layout
