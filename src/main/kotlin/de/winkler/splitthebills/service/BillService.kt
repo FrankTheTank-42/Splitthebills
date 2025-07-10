@@ -3,6 +3,8 @@ package de.winkler.splitthebills.service
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Component
 class BillService(
@@ -24,6 +26,12 @@ class BillService(
         return filtered;
     }
 
+    fun findGroupById(account_name: String, groupid: String): Group? {
+        return listGroups(account_name)
+            .filter { g -> g.id.toString().equals(groupid) }
+            .firstOrNull()
+    }
+
     fun hasAccount(group: Group, account_name: String): Boolean {
         for (account in group.accounts) {
             if (account.name.equals(account_name)) {
@@ -34,7 +42,20 @@ class BillService(
 
     }
 
-    fun saveGroup(group: Group, account_name: String) {
+    fun addAccount(group: Group, account_name: String):Boolean{
+        val account = accountRepository.findByName(account_name);
+        if (!account.isPresent) {
+            return false
+        }
+
+        if(group.accounts.contains(account.get())){
+            return false
+        }
+        group.accounts.add(account.get());
+        return true;
+    }
+
+    fun addAccountandSaveGroup(group: Group, account_name: String) {
         val account = accountRepository.findByName(account_name);
         if (!account.isPresent) {
             return;
@@ -63,5 +84,27 @@ class BillService(
             }
         }
         groupRepository.save(group);
+    }
+
+    fun deleteGroup(id: UUID) {
+        val groupO = groupRepository.findById(id);
+        if(!groupO.isPresent){
+            return
+        }
+        val group = groupO.get();
+
+        for (be in group.entries) {
+            for (bp in be.billParts) {
+                billPartRepository.delete(bp);
+            }
+
+            billRepository.delete(be);
+        }
+        for (p in group.persons) {
+            if (!personRepository.existsById(p.id)) {
+                personRepository.delete(p);
+            }
+        }
+        groupRepository.delete(group);
     }
 }

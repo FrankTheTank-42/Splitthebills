@@ -1,5 +1,6 @@
 package de.winkler.splitthebills.controller.api
 
+import de.winkler.splitthebills.config.SecurityConfig
 import de.winkler.splitthebills.entity.*
 import de.winkler.splitthebills.service.BillService
 import de.winkler.splitthebills.service.repository.AccountRepository
@@ -16,8 +17,8 @@ import java.security.Principal
 @RequestMapping("/api")
 class ApiController(
     val billService: BillService,
-    val accountRepository: AccountRepository//,
-    /*val encoder: PasswordEncoder*/
+    val accountRepository: AccountRepository,
+    val encoder: PasswordEncoder
 ) {
 
     @GetMapping("/bill")
@@ -62,7 +63,7 @@ class ApiController(
             return false;
         }
 
-        val account = Account("1", "2", "3");// newAccount.toAccount(encoder)
+        val account =newAccount.toAccount(encoder)
 
         if (accountRepository.existsByName(account.name)) {
             return false;

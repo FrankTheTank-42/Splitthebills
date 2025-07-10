@@ -16,7 +16,7 @@ class Group(
     @ManyToMany(fetch = FetchType.EAGER) val accounts: MutableList<Account>
 ) : Serializable {
     @Id
-    val id = UUID.randomUUID();
+    val id:UUID = UUID.randomUUID();
 
     constructor(name: String) : this(name, ArrayList(), ArrayList(), ArrayList())
 

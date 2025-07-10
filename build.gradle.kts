@@ -1,10 +1,10 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.4.0"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("plugin.jpa") version "1.9.25"
-    id("com.vaadin") version "24.6.0"
+    id("com.vaadin") version "24.8.2"
 }
 
 group = "de.winkler"
@@ -27,8 +27,6 @@ repositories {
 }
 
 dependencies {
-
-
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     //implementation("org.springframework.boot:spring-boot-starter-data-rest")
@@ -36,10 +34,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
-    implementation(platform("com.vaadin:vaadin-bom:24.6.0"))
+    implementation(platform("com.vaadin:vaadin-bom:24.8.2"))
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("com.vaadin:vaadin")
     implementation("com.vaadin:vaadin-renderer-flow")
+    //implementation("com.vaadin:vaadin-push:8.28.1")
+
     implementation("org.parttio:line-awesome:2.1.0")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

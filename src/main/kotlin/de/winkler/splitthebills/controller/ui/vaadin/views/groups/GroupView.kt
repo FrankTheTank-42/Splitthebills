@@ -1,10 +1,14 @@
 package de.winkler.splitthebills.controller.ui.vaadin.views.groups
 
+import com.vaadin.flow.component.Key
+import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.notification.Notification
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.*
 import com.vaadin.flow.spring.security.AuthenticationContext
 import de.winkler.splitthebills.entity.Account
@@ -13,7 +17,6 @@ import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.entity.Person
 import de.winkler.splitthebills.service.BillService
 import jakarta.annotation.security.PermitAll
-import org.vaadin.lineawesome.LineAwesomeIconUrl
 
 @PageTitle("Group")
 @Route("ui/vaadin/group")
@@ -24,6 +27,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
     val personGrid: Grid<Person>;
     val accountGrid: Grid<Account>;
     val title: H1
+    var group:Group?=null;
 
     init {
 
@@ -31,14 +35,30 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
         personGrid = Grid<Person>(Person::class.java)
         accountGrid = Grid<Account>(Account::class.java)
         title = H1("Group")
+        var newPersonTextField = TextField()
+        newPersonTextField.placeholder="new Person"
+        var addPersonButton = Button("Add a Person")
+        addPersonButton.addClickListener { click ->
+            ui.get().access {
+                if(group != null ){
+                    var person = Person(newPersonTextField.value)
+                    group!!.persons.add(person);
+                    billService.saveGroup(group!!)
+                    billService.personRepository.save(person)
+                }
 
+            }
+        }
+        addPersonButton.addClickShortcut(Key.ENTER)
 
         add(
             title,
             H2("Bills"),
             billGrid,
             H2("Persons"),
+
             personGrid,
+            HorizontalLayout(newPersonTextField,addPersonButton),
             H2("Accounts"),
             accountGrid
         )
@@ -48,15 +68,12 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
         if (groupid.isNullOrEmpty()) {
             Notification.show("Group id is empty")
         } else {
-            val group =
-                billService.listGroups(authContent.principalName.get()).filter { g -> g.id.toString().equals(groupid) }
-                    .firstOrNull();
-
+            val group = billService.findGroupById(authContent.principalName.get(), groupid)
+            println(group)
             if (group == null) {
                 Notification.show("Group not Found");
             } else {
-
-
+                this.group   = group;
                 title.text = group.name;
                 personGrid.setItems(group.persons)
                 accountGrid.setItems(group.accounts)
