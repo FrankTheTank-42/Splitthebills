@@ -31,9 +31,10 @@ class SecurityConfig : VaadinWebSecurity() {
                     authorize("/**", hasAuthority("USER"))
                 }
 
-
-
-                formLogin {
+                formLogin {  }
+                logout {
+                    invalidateHttpSession = true;
+                    deleteCookies("JSESSIONID")
                 }
             }
         }

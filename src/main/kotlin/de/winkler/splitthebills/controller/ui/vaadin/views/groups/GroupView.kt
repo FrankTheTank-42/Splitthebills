@@ -27,24 +27,24 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
     val personGrid: Grid<Person>;
     val accountGrid: Grid<Account>;
     val title: H1
-    var group:Group?=null;
+    var group: Group? = null;
 
     init {
 
-        billGrid = Grid<Bill>(Bill::class.java)
-        personGrid = Grid<Person>(Person::class.java)
-        accountGrid = Grid<Account>(Account::class.java)
+        billGrid = Grid(Bill::class.java)
+        personGrid = Grid(Person::class.java)
+        accountGrid = Grid(Account::class.java)
         title = H1("Group")
         var newPersonTextField = TextField()
-        newPersonTextField.placeholder="new Person"
+        newPersonTextField.placeholder = "new Person"
         var addPersonButton = Button("Add a Person")
         addPersonButton.addClickListener { click ->
             ui.get().access {
-                if(group != null ){
+                if (group != null) {
                     var person = Person(newPersonTextField.value)
                     group!!.persons.add(person);
                     billService.saveGroup(group!!)
-                    billService.personRepository.save(person)
+                    personGrid.setItems(group!!.persons)
                 }
 
             }
@@ -58,7 +58,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
             H2("Persons"),
 
             personGrid,
-            HorizontalLayout(newPersonTextField,addPersonButton),
+            HorizontalLayout(newPersonTextField, addPersonButton),
             H2("Accounts"),
             accountGrid
         )
@@ -73,7 +73,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
             if (group == null) {
                 Notification.show("Group not Found");
             } else {
-                this.group   = group;
+                this.group = group;
                 title.text = group.name;
                 personGrid.setItems(group.persons)
                 accountGrid.setItems(group.accounts)
