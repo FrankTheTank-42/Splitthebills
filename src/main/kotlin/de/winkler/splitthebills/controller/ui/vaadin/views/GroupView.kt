@@ -1,4 +1,4 @@
-package de.winkler.splitthebills.controller.ui.vaadin.views.groups
+package de.winkler.splitthebills.controller.ui.vaadin.views
 
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
@@ -9,7 +9,10 @@ import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.router.*
+import com.vaadin.flow.router.BeforeEvent
+import com.vaadin.flow.router.HasUrlParameter
+import com.vaadin.flow.router.PageTitle
+import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.security.AuthenticationContext
 import de.winkler.splitthebills.entity.Account
 import de.winkler.splitthebills.entity.Bill
@@ -19,15 +22,15 @@ import de.winkler.splitthebills.service.BillService
 import jakarta.annotation.security.PermitAll
 
 @PageTitle("Group")
-@Route("ui/vaadin/group")
+@Route("group")
 @PermitAll
 class GroupView(val authContent: AuthenticationContext, val billService: BillService) :
     HasUrlParameter<String>, VerticalLayout() {
-    val billGrid: Grid<Bill>;
-    val personGrid: Grid<Person>;
-    val accountGrid: Grid<Account>;
+    val billGrid: Grid<Bill>
+    val personGrid: Grid<Person>
+    val accountGrid: Grid<Account>
     val title: H1
-    var group: Group? = null;
+    var group: Group? = null
 
     init {
 
@@ -42,7 +45,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
             ui.get().access {
                 if (group != null) {
                     var person = Person(newPersonTextField.value)
-                    group!!.persons.add(person);
+                    group!!.persons.add(person)
                     billService.saveGroup(group!!)
                     personGrid.setItems(group!!.persons)
                 }
@@ -71,10 +74,10 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
             val group = billService.findGroupById(authContent.principalName.get(), groupid)
             println(group)
             if (group == null) {
-                Notification.show("Group not Found");
+                Notification.show("Group not Found")
             } else {
-                this.group = group;
-                title.text = group.name;
+                this.group = group
+                title.text = group.name
                 personGrid.setItems(group.persons)
                 accountGrid.setItems(group.accounts)
                 billGrid.setItems(group.entries)

@@ -4,7 +4,6 @@ import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Component
 class BillService(

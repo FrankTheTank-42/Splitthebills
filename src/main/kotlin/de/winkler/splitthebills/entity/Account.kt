@@ -2,9 +2,8 @@ package de.winkler.splitthebills.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 @Entity
 class Account(

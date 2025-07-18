@@ -1,4 +1,4 @@
-package de.winkler.splitthebills.controller.ui.vaadin.views.about
+package de.winkler.splitthebills.controller.ui.vaadin.views
 
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.Image

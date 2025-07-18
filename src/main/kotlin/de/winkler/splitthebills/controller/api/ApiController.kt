@@ -1,7 +1,7 @@
 package de.winkler.splitthebills.controller.api
 
-import de.winkler.splitthebills.config.SecurityConfig
-import de.winkler.splitthebills.entity.*
+import de.winkler.splitthebills.entity.Group
+import de.winkler.splitthebills.entity.NewAccount
 import de.winkler.splitthebills.service.BillService
 import de.winkler.splitthebills.service.repository.AccountRepository
 import org.springframework.security.core.annotation.AuthenticationPrincipal

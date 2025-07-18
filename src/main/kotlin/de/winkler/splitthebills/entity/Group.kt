@@ -1,12 +1,8 @@
 package de.winkler.splitthebills.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "GroupOfBills")
 class Group(
