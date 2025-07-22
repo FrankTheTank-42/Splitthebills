@@ -27,13 +27,13 @@ class RegisterView(
         val register = Button("register")
         register.addClickListener {
             ui.get().access {
-                var c = NewAccount(username.value, password.value, email.value)
-                if (!c.isComplete()) {
+                var newAccount = NewAccount(username.value,email.value,password.value)
+                if (!newAccount.isComplete()) {
                     Notification.show("Please Add everything")
-                } else if (accountRepository.findByName(c.name!!).isPresent) {
-                    Notification.show("The Name " + c.name!! + " already exists.")
+                } else if (accountRepository.findByName(newAccount.name!!).isPresent) {
+                    Notification.show("The Name " + newAccount.name!! + " already exists.")
                 } else {
-                    accountRepository.save(c.toAccount(encoder))
+                    accountRepository.save(newAccount.toAccount(encoder))
                     ui.get().page.setLocation("/login")
                 }
             }
