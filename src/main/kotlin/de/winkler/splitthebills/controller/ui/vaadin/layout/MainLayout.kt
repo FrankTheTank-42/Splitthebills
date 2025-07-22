@@ -71,10 +71,7 @@ class MainLayout(private val authContent: AuthenticationContext) : AppLayout() {
         footer.add(layout)
         if (authContent.principalName.isPresent) {
             val name = Paragraph(authContent.principalName.get())
-            val logout = Button("Logout")
-            logout.addClickListener {
-                    ui.get().page.setLocation("/logout")
-            }
+            val logout = Button("Logout", { authContent.logout() })
             layout.add(name)
             layout.add(logout)
         }

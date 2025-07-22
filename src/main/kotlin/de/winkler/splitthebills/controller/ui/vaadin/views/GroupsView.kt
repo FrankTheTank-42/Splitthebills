@@ -34,6 +34,7 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
             }
         }
 
+
         addButton.addClickListener { click ->
             ui.get().access {
                 var g = Group(newGroupTextfield.getValue())
@@ -43,6 +44,7 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
                 add(g, groupsListLayout)
             }
         }
+
         addButton.addClickShortcut(Key.ENTER)
 
 
