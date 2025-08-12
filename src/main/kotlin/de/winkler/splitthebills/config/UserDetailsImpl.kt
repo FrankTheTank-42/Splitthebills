@@ -1,4 +1,4 @@
-package de.winkler.splitthebills.service
+package de.winkler.splitthebills.config
 
 import de.winkler.splitthebills.entity.Account
 import org.springframework.security.core.GrantedAuthority
@@ -9,7 +9,11 @@ class UserDetailsImpl(val account: Account) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authorities: MutableList<GrantedAuthority> = ArrayList()
         authorities.add(SimpleGrantedAuthority(account.name))
-        authorities.add(SimpleGrantedAuthority("USER"))
+        if (account.isEnabled) {
+            authorities.add(SimpleGrantedAuthority("USER"))
+        } else {
+            authorities.add(SimpleGrantedAuthority("DOI"))
+        }
         return authorities
     }
 

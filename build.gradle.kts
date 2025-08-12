@@ -32,6 +32,7 @@ dependencies {
     //implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
     implementation(platform("com.vaadin:vaadin-bom:24.8.2"))

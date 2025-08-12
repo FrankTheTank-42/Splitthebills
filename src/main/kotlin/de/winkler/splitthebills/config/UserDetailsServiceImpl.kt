@@ -1,4 +1,4 @@
-package de.winkler.splitthebills.service
+package de.winkler.splitthebills.config
 
 import de.winkler.splitthebills.service.repository.AccountRepository
 import org.springframework.security.core.userdetails.UserDetails
