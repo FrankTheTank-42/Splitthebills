@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.server.VaadinRequest
 import com.vaadin.flow.server.auth.AnonymousAllowed
 import de.winkler.splitthebills.entity.NewAccount
 import de.winkler.splitthebills.service.repository.AccountRepository
@@ -18,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 @AnonymousAllowed
 class RegisterView(
     val accountRepository: AccountRepository,
-    val encoder: PasswordEncoder
+    val encoder: PasswordEncoder,
+    val request: VaadinRequest
 ) : VerticalLayout() {
     init {
         val username = TextField("Username")
@@ -33,6 +35,7 @@ class RegisterView(
                 } else if (accountRepository.findByName(newAccount.name!!).isPresent) {
                     Notification.show("The Name " + newAccount.name!! + " already exists.")
                 } else {
+                    println( request.contextPath)
                     accountRepository.save(newAccount.toAccount(encoder))
                     ui.get().page.setLocation("/login")
                 }

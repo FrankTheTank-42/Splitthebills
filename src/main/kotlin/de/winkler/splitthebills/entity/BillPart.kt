@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.util.*
 
 @Entity
-class BillPart(val person: Person, val amount: Double  ): Serializable {
+class BillPart(val person: Person, val amount: Int  ): Serializable {
     @Id
     val id = UUID.randomUUID();
 }
