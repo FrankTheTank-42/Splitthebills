@@ -14,6 +14,8 @@ import com.vaadin.flow.spring.security.AuthenticationContext
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.BillService
 import jakarta.annotation.security.PermitAll
+import jakarta.annotation.security.RolesAllowed
+import org.springframework.security.access.prepost.PreAuthorize
 import org.vaadin.lineawesome.LineAwesomeIconUrl
 
 
@@ -21,6 +23,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl
 @Route("groups")
 @Menu(order = .0, icon = LineAwesomeIconUrl.GLOBE_SOLID)
 @PermitAll
+@RolesAllowed("USER")
 class GroupsView(val authContent: AuthenticationContext, val billService: BillService) : VerticalLayout() {
     init {
         val newGroupTextfield = TextField()

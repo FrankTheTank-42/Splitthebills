@@ -18,6 +18,7 @@ class SecurityConfig : VaadinWebSecurity() {
         http!!{
             authorizeHttpRequests {
                 authorize("/line-awesome/**", permitAll)
+                authorize("/api/confirmAccount/**", permitAll)
             }
         }
 

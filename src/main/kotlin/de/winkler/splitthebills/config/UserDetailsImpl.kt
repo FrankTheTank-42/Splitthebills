@@ -9,13 +9,15 @@ class UserDetailsImpl(val account: Account) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authorities: MutableList<GrantedAuthority> = ArrayList()
         authorities.add(SimpleGrantedAuthority(account.name))
+
         if (account.isEnabled) {
-            authorities.add(SimpleGrantedAuthority("USER"))
+            authorities.add(SimpleGrantedAuthority("ROLE_USER"))
         } else {
-            authorities.add(SimpleGrantedAuthority("DOI"))
+            authorities.add(SimpleGrantedAuthority("ROLE_DOI"))
         }
         return authorities
     }
+    
 
     override fun getPassword(): String {
         return account.passwordhash

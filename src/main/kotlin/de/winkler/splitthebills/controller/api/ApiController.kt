@@ -6,9 +6,11 @@ import de.winkler.splitthebills.entity.NewAccount
 import de.winkler.splitthebills.service.BillService
 import de.winkler.splitthebills.service.repository.AccountRepository
 import de.winkler.splitthebills.service.repository.ConfirmationRepository
+import jakarta.websocket.server.PathParam
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -26,21 +28,18 @@ class ApiController(
 ) {
 
 
-    @GetMapping("/confirmAccount")
-    fun confirmAccount(@RequestParam token: String): String {
+    @GetMapping("/confirmAccount/{token}")
+    fun confirmAccount(@PathVariable token: String): String {
         var confirmation = confirmationRepository.findByToken(token)
         if (!confirmation.isPresent) {
             return "not found"
         } else {
-            var account = accountRepository.findByEmailIgnoreCase(confirmation.get().account.email)
-            if (account.isPresent) {
-                account.get().isEnabled = true;
-                accountRepository.save(account.get())
-                confirmationRepository.delete(confirmation.get())
-                return confirmation.get().toString()
-            } else {
-                return "not found"
-            }
+            var account = confirmation.get().account
+            account.isEnabled = true;
+            accountRepository.save(account)
+            confirmationRepository.delete(confirmation.get())
+            return confirmation.get().toString()
+
         }
     }
 

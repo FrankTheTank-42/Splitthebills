@@ -12,20 +12,27 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.server.auth.AnonymousAllowed
 import com.vaadin.flow.spring.security.AuthenticationContext
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin
+import de.winkler.splitthebills.service.AccountService
 import org.vaadin.lineawesome.LineAwesomeIconUrl
 
 @PageTitle("Welcome")
 @Route("")
 @Menu(order = 0.0, icon = LineAwesomeIconUrl.FILE)
 @AnonymousAllowed
-class WelcomeView(authContext: AuthenticationContext) : VerticalLayout() {
+class WelcomeView(authContext: AuthenticationContext, accountService: AccountService) : VerticalLayout() {
     init {
         isSpacing = false
         val header = H1("Welcome to Split the bills")
         header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM)
         add(header)
-        if(authContext.isAuthenticated){
+        if (authContext.isAuthenticated) {
             add(Paragraph("Welcome " + authContext.principalName.get()))
+            if(authContext.hasAuthority("ROLE_DOI")){
+                add(Paragraph("Please Confirm your email address. "))
+                add(Button("Resend", {
+                    accountService.resend(authContext.principalName.get())
+                }))
+            }
         } else {
             add("You are not logged in")
             val registerButton = Button("Register")
