@@ -28,7 +28,6 @@ class AccountService(
 ) {
 
     fun register(newAccount: NewAccount) {
-        println("Context" + context.contextPath)
         var account = newAccount.toAccount(encoder)
         accountRepository.save(account)
         send(account)
@@ -38,13 +37,14 @@ class AccountService(
         var confirmation = Confirmation(account)
         confirmationRepository.save(confirmation)
 
-        //Costruct Mail
+        //Construct Mail
         var email = SimpleMailMessage()
         email.subject = "Register for Split the Bills"
         email.setTo(account.email)
         email.setFrom("support@test.de")
         var contextpath = "http://localhost:8080"
         var confirmationLink = contextpath + "/api/confirmAccount/" + confirmation.token
+        println(messages.getMessage("message.confirmationRequiredLink", null, Locale.ENGLISH));
         var text = "Please  Confirm" //messages.getMessage("message.regSuccLink", null, Locale.ENGLISH);
         email.text = text + "\r\n" + confirmationLink
 

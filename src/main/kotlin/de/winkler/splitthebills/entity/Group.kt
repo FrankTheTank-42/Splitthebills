@@ -14,6 +14,6 @@ class Group(
     @Id
     val id:UUID = UUID.randomUUID();
 
-    constructor(name: String) : this(name, ArrayList(), ArrayList(), ArrayList())
+    constructor(name: String) : this(name, mutableListOf(), mutableListOf(), mutableListOf())
 
 }

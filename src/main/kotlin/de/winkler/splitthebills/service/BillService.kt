@@ -3,6 +3,7 @@ package de.winkler.splitthebills.service
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Component
@@ -16,7 +17,7 @@ class BillService(
 
     fun listGroups(account_name: String): MutableList<Group> {
         var groups = groupRepository.findAll();
-        var filtered: MutableList<Group> = ArrayList();
+        var filtered= mutableListOf<Group>();
         for (group in groups) {
             if (hasAccount(group, account_name)) {
                 filtered.add(group);

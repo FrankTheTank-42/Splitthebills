@@ -9,6 +9,12 @@ services:
     ports:
       - '3306:3306'
 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8090:8080
+
   mailpit:
     image: axllent/mailpit
     container_name: mailpit

@@ -38,16 +38,13 @@ class ApiController(
             account.isEnabled = true;
             accountRepository.save(account)
             confirmationRepository.delete(confirmation.get())
-            return confirmation.get().toString()
+            return "redirect:/"
 
         }
     }
 
     @GetMapping("/bill")
     fun listBills(principal: Principal): MutableIterable<Group> {
-        println("get bills")
-
-        println(principal.name);
         return billService.listGroups(principal.name);
     }
 

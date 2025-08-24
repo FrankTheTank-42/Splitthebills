@@ -2,6 +2,7 @@ package de.winkler.splitthebills.controller.ui.vaadin.views
 
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H2
@@ -14,6 +15,7 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.security.AuthenticationContext
+import de.winkler.splitthebills.controller.ui.vaadin.views.dialog.NewBillDialog
 import de.winkler.splitthebills.entity.Account
 import de.winkler.splitthebills.entity.Bill
 import de.winkler.splitthebills.entity.Group
@@ -31,10 +33,25 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
     val accountGrid: Grid<Account>
     val title: H1
     var group: Group? = null
+    val addBillButton: Button
 
     init {
 
         billGrid = Grid(Bill::class.java)
+        addBillButton = Button("Add a bill")
+        addBillButton.isEnabled = group?.persons?.isEmpty() == true
+        addBillButton.addClickListener { click ->
+            ui.get().access {
+                var dialog = NewBillDialog()
+                dialog.openNameDialog { bill ->
+                    run {
+                        group!!.entries.add(bill)
+                        billService.saveGroup(group!!)
+                        billGrid.setItems(group!!.entries)
+                    }
+                }
+            }
+        }
         personGrid = Grid(Person::class.java)
         accountGrid = Grid(Account::class.java)
         title = H1("Group")
@@ -49,7 +66,6 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
                     billService.saveGroup(group!!)
                     personGrid.setItems(group!!.persons)
                 }
-
             }
         }
         addPersonButton.addClickShortcut(Key.ENTER)
@@ -57,6 +73,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
         add(
             title,
             H2("Bills"),
+            addBillButton,
             billGrid,
             H2("Persons"),
 
@@ -72,7 +89,6 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
             Notification.show("Group id is empty")
         } else {
             val group = billService.findGroupById(authContent.principalName.get(), groupid)
-            println(group)
             if (group == null) {
                 Notification.show("Group not Found")
             } else {
@@ -81,6 +97,7 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
                 personGrid.setItems(group.persons)
                 accountGrid.setItems(group.accounts)
                 billGrid.setItems(group.entries)
+                addBillButton.isEnabled = !group.persons.isEmpty()
             }
         }
     }
