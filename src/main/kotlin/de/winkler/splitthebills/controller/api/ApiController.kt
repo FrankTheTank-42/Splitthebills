@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.servlet.ModelAndView
 import java.security.Principal
 
 
@@ -38,7 +39,11 @@ class ApiController(
             account.isEnabled = true;
             accountRepository.save(account)
             confirmationRepository.delete(confirmation.get())
-            return "redirect:/"
+            var body =
+                "<HTML><body> <p>Your Mail was succceesfully confirmed. Please login again.</p> <a href=\"" +
+                        "http://localhost:8080/login" +
+                        "\">To Login</a></body></HTML>";
+            return (body);
 
         }
     }

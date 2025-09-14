@@ -3,7 +3,6 @@ package de.winkler.splitthebills.service
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Component
@@ -17,7 +16,7 @@ class BillService(
 
     fun listGroups(account_name: String): MutableList<Group> {
         var groups = groupRepository.findAll();
-        var filtered= mutableListOf<Group>();
+        var filtered = mutableListOf<Group>();
         for (group in groups) {
             if (hasAccount(group, account_name)) {
                 filtered.add(group);
@@ -42,13 +41,27 @@ class BillService(
 
     }
 
-    fun addAccount(group: Group, account_name: String):Boolean{
+    open fun newGroup(groupName: String, accountName: String): Group? {
+        if (groupRepository.findAllByName(groupName)
+                .count { hasAccount(it, accountName) }
+            > 0) {
+            //group with that name already exists
+            return null
+        }
+        var group = Group(groupName)
+        addAccountToGroup(group, accountName)
+        saveGroup(group)
+        return group
+    }
+
+
+    fun addAccountToGroup(group: Group, account_name: String): Boolean {
         val account = accountRepository.findByName(account_name);
         if (!account.isPresent) {
             return false
         }
 
-        if(group.accounts.contains(account.get())){
+        if (group.accounts.contains(account.get())) {
             return false
         }
         group.accounts.add(account.get());
@@ -88,7 +101,7 @@ class BillService(
 
     fun deleteGroup(id: UUID) {
         val groupO = groupRepository.findById(id);
-        if(!groupO.isPresent){
+        if (!groupO.isPresent) {
             return
         }
         val group = groupO.get();

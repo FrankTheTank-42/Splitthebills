@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.VaadinIcon
+import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
@@ -15,7 +16,6 @@ import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.BillService
 import jakarta.annotation.security.PermitAll
 import jakarta.annotation.security.RolesAllowed
-import org.springframework.security.access.prepost.PreAuthorize
 import org.vaadin.lineawesome.LineAwesomeIconUrl
 
 
@@ -40,11 +40,16 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
 
         addButton.addClickListener { click ->
             ui.get().access {
-                var g = Group(newGroupTextfield.getValue())
-                billService.addAccount(g, authContent.principalName.get())
-                billService.saveGroup(g)
-                groupsList.add(g)
-                add(g, groupsListLayout)
+                var g = billService.newGroup(
+                    newGroupTextfield.getValue(),
+                    authContent.principalName.get()
+                )
+                if (g == null) {
+                    Notification.show("You have already created a group with that name")
+                } else {
+                    groupsList.add(g)
+                    add(g, groupsListLayout)
+                }
             }
         }
 

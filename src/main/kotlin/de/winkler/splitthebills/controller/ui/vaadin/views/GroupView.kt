@@ -2,7 +2,6 @@ package de.winkler.splitthebills.controller.ui.vaadin.views
 
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H2
@@ -15,7 +14,7 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.security.AuthenticationContext
-import de.winkler.splitthebills.controller.ui.vaadin.views.dialog.NewBillDialog
+import de.winkler.splitthebills.controller.ui.vaadin.views.dialog.BillDialog
 import de.winkler.splitthebills.entity.Account
 import de.winkler.splitthebills.entity.Bill
 import de.winkler.splitthebills.entity.Group
@@ -42,29 +41,34 @@ class GroupView(val authContent: AuthenticationContext, val billService: BillSer
         addBillButton.isEnabled = group?.persons?.isEmpty() == true
         addBillButton.addClickListener { click ->
             ui.get().access {
-                var dialog = NewBillDialog()
-                dialog.openNameDialog { bill ->
-                    run {
-                        group!!.entries.add(bill)
-                        billService.saveGroup(group!!)
-                        billGrid.setItems(group!!.entries)
-                    }
+                var dialog = BillDialog(group!!.persons)
+                dialog.openBillDialog {
+                    group!!.entries.add(it)
+                    billService.saveGroup(group!!)
+                    billGrid.setItems(group!!.entries)
                 }
             }
         }
-        personGrid = Grid(Person::class.java)
-        accountGrid = Grid(Account::class.java)
+        personGrid = Grid(
+            Person::
+            class.java
+        )
+        accountGrid = Grid(
+            Account::
+            class.java
+        )
         title = H1("Group")
         var newPersonTextField = TextField()
         newPersonTextField.placeholder = "new Person"
         var addPersonButton = Button("Add a Person")
-        addPersonButton.addClickListener { click ->
+        addPersonButton.addClickListener{
             ui.get().access {
                 if (group != null) {
                     var person = Person(newPersonTextField.value)
                     group!!.persons.add(person)
                     billService.saveGroup(group!!)
                     personGrid.setItems(group!!.persons)
+                    addBillButton.isEnabled = true
                 }
             }
         }
