@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-interface ConfirmationRepository : CrudRepository<Confirmation, UUID> {
+interface ConfirmationRepository : CrudRepository<Confirmation, Long> {
     fun findByToken(token: String) : Optional<Confirmation>
     @Transactional
     fun deleteByAccount(account: Account)

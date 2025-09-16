@@ -1,6 +1,8 @@
 package de.winkler.splitthebills.entity
 
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import java.io.Serializable
 import java.util.*
@@ -9,16 +11,14 @@ import java.util.*
 class BillPart(
     val person: Person,
     var amount: Int,
-    var bill: Bill
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long = 0
 ) : Serializable {
-    @Id
-    val id = UUID.randomUUID();
 
-    fun part(): Double {
-        if (bill.totalamount == 0) {
+    fun part(totalAmount: Int): Double {
+        if (totalAmount == 0) {
             return 0.0
         } else {
-            return amount.toDouble() / bill.totalamount.toDouble()
+            return amount.toDouble() / totalAmount.toDouble()
         }
     }
 }

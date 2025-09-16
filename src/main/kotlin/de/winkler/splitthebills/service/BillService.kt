@@ -3,6 +3,7 @@ package de.winkler.splitthebills.service
 import de.winkler.splitthebills.entity.Group
 import de.winkler.splitthebills.service.repository.*
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Component
@@ -41,15 +42,18 @@ class BillService(
 
     }
 
+    @Transactional
     open fun newGroup(groupName: String, accountName: String): Group? {
         if (groupRepository.findAllByName(groupName)
                 .count { hasAccount(it, accountName) }
-            > 0) {
+            > 0
+        ) {
             //group with that name already exists
             return null
         }
         var group = Group(groupName)
         addAccountToGroup(group, accountName)
+
         saveGroup(group)
         return group
     }
@@ -75,49 +79,17 @@ class BillService(
         }
 
         group.accounts.add(account.get());
+
         saveGroup(group)
 
     }
 
+    @Transactional
     fun saveGroup(group: Group) {
-        for (p in group.persons) {
-            if (!personRepository.existsById(p.id)) {
-                personRepository.save(p);
-
-            }
-        }
-        for (be in group.entries) {
-            for (bp in be.billParts) {
-                if (!billPartRepository.existsById(bp.id)) {
-                    billPartRepository.save(bp);
-                }
-            }
-            if (!billRepository.existsById(be.id)) {
-                billRepository.save(be);
-            }
-        }
         groupRepository.save(group);
     }
 
-    fun deleteGroup(id: UUID) {
-        val groupO = groupRepository.findById(id);
-        if (!groupO.isPresent) {
-            return
-        }
-        val group = groupO.get();
-
-        for (be in group.entries) {
-            for (bp in be.billParts) {
-                billPartRepository.delete(bp);
-            }
-
-            billRepository.delete(be);
-        }
-        for (p in group.persons) {
-            if (!personRepository.existsById(p.id)) {
-                personRepository.delete(p);
-            }
-        }
-        groupRepository.delete(group);
+    fun deleteGroup(id: Long) {
+        groupRepository.deleteById(id)
     }
 }

@@ -75,7 +75,7 @@ class GroupsView(val authContent: AuthenticationContext, val billService: BillSe
         var layout = HorizontalLayout(b, delete)
         delete.addClickListener { click ->
             delete.ui.get().access {
-                billService.deleteGroup(group.id)
+                billService.deleteGroup(group.id!!)
                 groupsListLayout.remove(layout)
             }
         }

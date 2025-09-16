@@ -1,7 +1,10 @@
 package de.winkler.splitthebills.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import java.io.Serializable
@@ -12,10 +15,10 @@ class Bill(
     var name: String,
     var totalamount: Int,
     var mainPayer: Person,
-    @OneToMany(fetch = FetchType.EAGER) val billParts: MutableList<BillPart>
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL]) val billParts: MutableList<BillPart>,
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long = 0
 ) : Serializable {
-    @Id
-    val id = UUID.randomUUID();
+
     var mode = Mode.PARTS
 
     enum class Mode {
@@ -26,24 +29,18 @@ class Bill(
     fun totalAmountAsString() = (totalamount.toDouble() / 100).toString()
 }
 
-
-fun defaultBill(name: String, totalamount: Int, persons: MutableList<Person>): Bill {
-    var billParts = mutableListOf<BillPart>()
-    var bill = Bill(name, totalamount, persons.first(), billParts)
-    billParts.addAll(persons.map { BillPart(it, 0, bill) })
-    billParts.first().amount = totalamount
-    return bill
-}
-
 class BillBuilder() {
 
     constructor(bill: Bill) : this() {
         this.name = bill.name
         this.totalAmount = bill.totalamount
+        this.billParts = bill.billParts
         this.bill = bill
+
     }
 
     constructor(persons: MutableList<Person>) : this() {
+
         setPersons(persons)
     }
 
@@ -52,38 +49,21 @@ class BillBuilder() {
         get() = field
         set(value) {
             field = value
-            if (bill != null) {
-                var diff = sumBillParts()!! - totalAmount!!
-                var bp = bill!!.billParts.find { it.person == bill!!.mainPayer }
-                if (diff != 0 && bp != null) {
-                    bp.amount += diff
-                }
-            }
-        }
-    var bill: Bill? = null
-        get() = if (field == null || totalAmount == null && name == null) {
-            null
-        } else {
-            field!!.name = name!!
-            field!!.totalamount = totalAmount!!
-            var diff = sumBillParts()!! - totalAmount!!
-            var bp = field!!.billParts.find { it.person == field!!.mainPayer }
+
+            var diff = totalAmount!! - sumBillParts()!!
+            var bp = if (bill == null) billParts.firstOrNull() else billParts.find { it.person == bill!!.mainPayer }
             if (diff != 0 && bp != null) {
                 bp.amount += diff
+
             }
-            field
         }
 
-    fun setName(name: String): BillBuilder {
-        this.name = name
-        return this
-    }
-
+    var bill: Bill? = null
+    lateinit var billParts: MutableList<BillPart>
 
     fun setPersons(persons: MutableList<Person>) {
-        var billParts = mutableListOf<BillPart>()
-        bill = Bill("", 0, persons.first(), billParts)
-        billParts.addAll(persons.map { BillPart(it, 0, bill!!) })
+        billParts = mutableListOf()
+        billParts.addAll(persons.map { BillPart(it, 0) })
     }
 
     fun isValid(): Boolean {
@@ -92,11 +72,18 @@ class BillBuilder() {
 
     fun totalAmountAsString() = if (totalAmount == null) "0.00" else (totalAmount!!.toDouble() / 100).toString()
 
-    fun sumBillParts() = bill?.billParts?.fold(0) { acc, next -> acc + next.amount }
+    fun sumBillParts() = billParts?.fold(0) { acc, next -> acc + next.amount }
 
     fun build(): Bill? {
-        return bill
-
+        if (totalAmount == null || name == null) {
+            return null
+        } else {
+            if (bill == null) {
+                bill = Bill(name!!, totalAmount!!, billParts.first().person, billParts)
+            }
+            bill!!.name = name!!
+            bill!!.totalamount = totalAmount!!
+            return bill
+        }
     }
-
 }

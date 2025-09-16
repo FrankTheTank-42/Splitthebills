@@ -12,9 +12,8 @@ class Account(
     val name: String,
     val email: String,
     val passwordhash: String,
-    var isEnabled: Boolean = false
+    var isEnabled: Boolean = false,
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long = 0
 ) : Serializable {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    var id: Long = 0;
+
 }

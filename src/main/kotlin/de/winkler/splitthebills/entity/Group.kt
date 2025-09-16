@@ -7,12 +7,11 @@ import java.util.*
 @Entity(name = "GroupOfBills")
 class Group(
     val name: String,
-    @ManyToMany(fetch = FetchType.EAGER) val persons: MutableList<Person>,
-    @OneToMany(fetch = FetchType.EAGER) val entries: MutableList<Bill>,
-    @ManyToMany(fetch = FetchType.EAGER) val accounts: MutableList<Account>
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL]) val persons: MutableList<Person>,
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL]) val entries: MutableList<Bill>,
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL]) val accounts: MutableList<Account>,
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long = 0
 ) : Serializable {
-    @Id
-    val id:UUID = UUID.randomUUID();
 
     constructor(name: String) : this(name, mutableListOf(), mutableListOf(), mutableListOf())
 

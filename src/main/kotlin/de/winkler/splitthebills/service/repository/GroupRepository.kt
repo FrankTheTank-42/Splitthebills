@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import java.util.*
 
-interface GroupRepository : CrudRepository<Group, UUID> {
+interface GroupRepository : CrudRepository<Group, Long> {
 
     fun existsByName(name: String): Boolean
 
